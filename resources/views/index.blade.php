@@ -51,45 +51,48 @@
 </div>
 
 <div id="searchResults">
-<table class="table table-bordered">
-    <tr>
-        <th>ID</th>
-        <th>商品画像</th>
-        <th>商品名</th>
-        <th>価格</th>
-        <th>在庫数</th>
-        <th>メーカー名</th>
-        <th></th>
-        <th></th>
+<table class="table table-bordered" id="productTable">
+    <thead>
+        <tr>
+            <th data-sort="id">ID</th>
+            <th data-sort="image">商品画像</th>
+            <th data-sort="syouhinmei">商品名</th>
+            <th data-sort="kakaku">価格</th>
+            <th data-sort="zaikosuu">在庫数</th>
+            <th data-sort="company_name">メーカー名</th>
+            <th></th>
+            <th></th>
 
-    </tr>
-
-    @foreach ($products as $product)
-    <tr>
-        <td style="text-align:right">{{$product->id}}</td>
-        <td>
-            @if ($product->image)
-            <img src="{{ asset('storage/images/' . $product->image) }}" alt="商品画像" class="img-thumbnail" width="100">
-            @else
-            画像なし
-            @endif
-        </td>
-        <td><a class="" href="{{ route('product.show', $product->id) }}">{{$product->syouhinmei}}</a></td>
-        <td style="text-align:right">{{$product->kakaku}}円</td>
-        <td style="text-align:right">{{$product->zaikosuu}}</td>
-        <td style="text-align:right">{{$product->company_name}}</td>
-        <td style="text-align:center">
-            <a class="btn btn-primary" href="{{ route('product.show', $product->id) }}">詳細</a>
-        </td>
-        <td style="text-align:center">
-            <form action ="{{ route('product.destroy',$product -> id )}}"method="POST">
-                @csrf
-                @method('DELETE')
-            <button type="submit" class="btn btn-sm btn-danger" onclick = 'return confirm("削除しますか？");'>削除</button>
-            </form>
-        </td>
-    </tr>
-    @endforeach
+        </tr>
+    </thead>
+        <tbody>
+        @foreach ($products as $product)
+        <tr>
+            <td style="text-align:right">{{$product->id}}</td>
+            <td>
+                @if ($product->image)
+                <img src="{{ asset('storage/images/' . $product->image) }}" alt="商品画像" class="img-thumbnail" width="100">
+                @else
+                画像なし
+                @endif
+            </td>
+            <td><a class="" href="{{ route('product.show', $product->id) }}">{{$product->syouhinmei}}</a></td>
+            <td style="text-align:right">{{$product->kakaku}}円</td>
+            <td style="text-align:right">{{$product->zaikosuu}}</td>
+            <td style="text-align:right">{{$product->company_name}}</td>
+            <td style="text-align:center">
+                <a class="btn btn-primary" href="{{ route('product.show', $product->id) }}">詳細</a>
+            </td>
+            <td style="text-align:center">
+                <form action ="{{ route('product.destroy',$product -> id )}}"method="POST">
+                    @csrf
+                    @method('DELETE')
+                <button type="submit" class="btn btn-sm btn-danger" onclick = 'return confirm("削除しますか？");'>削除</button>
+                </form>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
 </table>
 </div>
 
@@ -98,6 +101,12 @@
 
     <script>
         $(document).ready(function() {
+            function initializeTableSorter() {
+            $('#productTable').tablesorter();
+            }
+
+            initializeTableSorter();
+
             $('#searchForm').on('submit', function(e) {
                 e.preventDefault();
                 $.ajax({
@@ -113,6 +122,7 @@
                     },
                     success: function(response) {
                         $('#searchResults').html(response);
+                        initializeTableSorter();
                     }
                 });
             });
