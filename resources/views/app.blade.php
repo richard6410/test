@@ -17,6 +17,10 @@
     <!-- TableSorter JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js" integrity="sha384-oCzDl2l5CVox5cMh6KrCe5b6sWh0MYiTf4Yi7o2ekW0zsdSktFVQQwGPhWWi1DAZ" crossorigin="anonymous"></script>
 
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/js/jquery.tablesorter.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/css/theme.default.min.css">
+
 </head>
 <body>
     <div class="container">
@@ -62,6 +66,7 @@
             $('#productTable').tablesorter();
         }
     });
-</script>
+
+  </script>
 </body>
 </html>

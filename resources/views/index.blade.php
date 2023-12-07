@@ -84,10 +84,10 @@
                 <a class="btn btn-primary" href="{{ route('product.show', $product->id) }}">詳細</a>
             </td>
             <td style="text-align:center">
-                <form action ="{{ route('product.destroy',$product -> id )}}"method="POST">
+                <form id="deleteForm{{$product->id}}" action="{{ route('products.destroy', $product->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                <button type="submit" class="btn btn-sm btn-danger" onclick = 'return confirm("削除しますか？");'>削除</button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="deleteProduct({{ $product->id }})">削除</button>
                 </form>
             </td>
         </tr>
@@ -127,6 +127,30 @@
                 });
             });
         });
+
+    function deleteProduct(productId) {
+        if (confirm("削除しますか？")) {
+            $.ajax({
+                type: 'DELETE',
+                url: '/products/' + productId,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (data) {
+                    if (data.success) {
+                        // 削除が成功したら、該当の行を非表示にする
+                        $('#row' + productId).hide();
+                        alert('削除が完了しました');
+                    } else {
+                        alert('削除に失敗しました');
+                    }
+                },
+                error: function () {
+                    alert('エラーが発生しました');
+                }
+            });
+        }
+    }
     </script>
 
 @endsection

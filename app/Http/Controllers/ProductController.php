@@ -70,13 +70,15 @@ class ProductController extends Controller
 
             DB::commit();
 
-            return redirect()->route('products.index')->with('success', '商品名'.$product->syouhinmei.'を削除しました');
+            return response()->json(['success' => true]);
         } catch (\Exception $e) {
             Log::error('削除中にエラーが発生しました: ' . $e->getMessage());
             DB::rollback();
-            return back()->with('error', '削除中にエラーが発生しました: '.$e->getMessage());
+            return response()->json(['success' => false]);
+
         }
     }
+    
 
     public function search(Request $request,$price_min = null, $price_max = null)
     {
