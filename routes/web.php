@@ -55,4 +55,3 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/products/sort/{column}/{direction}', 'ProductController@index')->name('products.sort');
 
-Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');

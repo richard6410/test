@@ -84,10 +84,10 @@
                 <a class="btn btn-primary" href="{{ route('product.show', $product->id) }}">詳細</a>
             </td>
             <td style="text-align:center">
-                <form id="deleteForm{{$product->id}}" action="{{ route('products.destroy', $product->id) }}" method="POST">
+                <form action ="{{ route('product.destroy',$product -> id )}}"method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="button" class="btn btn-sm btn-danger" onclick="deleteProduct({{ $product->id }})">削除</button>
+                <button type="submit" class="btn btn-sm btn-danger" onclick = 'return confirm("削除しますか？");'>削除</button>
                 </form>
             </td>
         </tr>
@@ -99,58 +99,70 @@
     {!! $products->links('pagination::bootstrap-5') !!}
     </div>
 
-    <script>
-        $(document).ready(function() {
-            function initializeTableSorter() {
+<script>
+ $(document).ready(function() {
+        // TableSorterの初期化関数
+        function initializeTableSorter() {
             $('#productTable').tablesorter();
-            }
+        }
 
-            initializeTableSorter();
+        // TableSorterの初期化
+        initializeTableSorter();
 
-            $('#searchForm').on('submit', function(e) {
-                e.preventDefault();
-                $.ajax({
-                    type: 'GET',
-                    url: $(this).attr('action'),
-                    data: {
-                        syouhinmei: $('input[name="syouhinmei"]').val(),
-                        company_name: $('select[name="company_name"]').val(),
-                        price_min: $('input[name="price_min"]').val(),
-                        price_max: $('input[name="price_max"]').val(),
-                        stock_min: $('input[name="stock_min"]').val(),
-                        stock_max: $('input[name="stock_max"]').val(),
-                    },
-                    success: function(response) {
-                        $('#searchResults').html(response);
-                        initializeTableSorter();
-                    }
-                });
+        // 検索フォームの非同期送信
+        $('#searchForm').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'GET',
+                url: $(this).attr('action'),
+                data: {
+                    syouhinmei: $('input[name="syouhinmei"]').val(),
+                    company_name: $('select[name="company_name"]').val(),
+                    price_min: $('input[name="price_min"]').val(),
+                    price_max: $('input[name="price_max"]').val(),
+                    stock_min: $('input[name="stock_min"]').val(),
+                    stock_max: $('input[name="stock_max"]').val(),
+                },
+                success: function(response) {
+                    // 検索結果を表示エリアにセット
+                    $('#searchResults').html(response);
+                    // TableSorterの再初期化
+                    initializeTableSorter();
+                }
             });
         });
+    });
 
-    function deleteProduct(productId) {
-        if (confirm("削除しますか？")) {
+        // 非同期で削除処理を行う関数
+        function deleteProduct(productId) {
             $.ajax({
                 type: 'DELETE',
-                url: '/products/' + productId,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (data) {
-                    if (data.success) {
-                        // 削除が成功したら、該当の行を非表示にする
-                        $('#row' + productId).hide();
-                        alert('削除が完了しました');
+                url: '/product/' + productId + '/delete',
+                success: function(response) {
+                    if (response.success) {
+                        // 削除成功時は行を非表示にする
+                        $('#productRow_' + productId).hide();
+                        window.location.href = '/some/other/page';
                     } else {
-                        alert('削除に失敗しました');
+                        alert('削除に失敗しました。');
                     }
                 },
-                error: function () {
-                    alert('エラーが発生しました');
+                error: function() {
+                    alert('削除に失敗しました。');
                 }
             });
         }
-    }
+
+        // 削除ボタンがクリックされた時の処理
+        $('#searchResults').on('click', '.deleteBtn', function(event) {
+            event.preventDefault();
+            var productId = $(this).data('product-id');
+            if (confirm('削除しますか？')) {
+                // 非同期で削除処理を呼び出す
+                deleteProduct(productId);
+            }
+        });
+    });
     </script>
 
 @endsection
