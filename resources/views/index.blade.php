@@ -84,11 +84,7 @@
                 <a class="btn btn-primary" href="{{ route('product.show', $product->id) }}">詳細</a>
             </td>
             <td style="text-align:center">
-                <form action ="{{ route('product.destroy',$product -> id )}}"method="POST">
-                    @csrf
-                    @method('DELETE')
-                <button type="submit" class="btn btn-sm btn-danger" onclick = 'return confirm("削除しますか？");'>削除</button>
-                </form>
+                <button type="submit" class="btn btn-sm btn-danger" );'>削除</button>
             </td>
         </tr>
         @endforeach
@@ -136,13 +132,16 @@
         // 非同期で削除処理を行う関数
         function deleteProduct(productId) {
             $.ajax({
-                type: 'DELETE',
-                url: '/product/' + productId + '/delete',
+                type: 'POST',
+                headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: 'products/destroy/' + productId,
+                data: {'_method':'DELETE'},
                 success: function(response) {
                     if (response.success) {
                         // 削除成功時は行を非表示にする
                         $('#productRow_' + productId).hide();
-                        window.location.href = '/some/other/page';
                     } else {
                         alert('削除に失敗しました。');
                     }
@@ -154,7 +153,7 @@
         }
 
         // 削除ボタンがクリックされた時の処理
-        $('#searchResults').on('click', '.deleteBtn', function(event) {
+        $('.btn-danger').on('click', function(event) {
             event.preventDefault();
             var productId = $(this).data('product-id');
             if (confirm('削除しますか？')) {
@@ -162,7 +161,7 @@
                 deleteProduct(productId);
             }
         });
-    });
+    
     </script>
 
 @endsection
