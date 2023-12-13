@@ -66,6 +66,7 @@ class ProductController extends Controller
         DB::beginTransaction();
 
         try {
+            $product = Product::findOrFail($id);
             $product->delete();
 
             DB::commit();

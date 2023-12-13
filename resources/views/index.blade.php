@@ -84,7 +84,7 @@
                 <a class="btn btn-primary" href="{{ route('product.show', $product->id) }}">詳細</a>
             </td>
             <td style="text-align:center">
-                <button type="submit" class="btn btn-sm btn-danger" );'>削除</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="deleteProduct({{ $product->id }})">削除</button>
             </td>
         </tr>
         @endforeach
@@ -139,18 +139,20 @@
                 url: 'products/destroy/' + productId,
                 data: {'_method':'DELETE'},
                 success: function(response) {
-                    if (response.success) {
+                    console.log(response); // レスポンスの内容をコンソールに表示
+                        if (response.success) {
                         // 削除成功時は行を非表示にする
                         $('#productRow_' + productId).hide();
                     } else {
                         alert('削除に失敗しました。');
                     }
                 },
-                error: function() {
-                    alert('削除に失敗しました。');
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('AJAX エラー:', textStatus, errorThrown);
+                    alert('リクエストに失敗しました。');
                 }
             });
-        }
+        };
 
         // 削除ボタンがクリックされた時の処理
         $('.btn-danger').on('click', function(event) {
