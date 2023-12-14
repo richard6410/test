@@ -9,7 +9,6 @@
 
         <div class="col">
             <input type="number" name="price_min" class="form-control" placeholder="最小価格">
-
         </div>
 
         <div class="col">
@@ -39,19 +38,19 @@
     </div>
 </form>
     <div class="text-right">
-    <a class="btn btn-success" href="{{ route('product.create')}}">新規登録</a>
+        <a class="btn btn-success" href="{{ route('product.create')}}">新規登録</a>
     </div>
 </div>
 </div>
 <div class="col-lg-12">
     @if ($message =Session::get('success'))
-        <div class="alert-success mt-1"><p>{{$message}}</p></div>
+        <div class="alert alert-success mt-1"><p>{{$message}}</p></div>
     @endif
 </div>
 </div>
 
 <div id="searchResults">
-<table class="table table-bordered" id="productTable">
+<table class="table table-bordered tablesorter" id="productTable">
     <thead>
         <tr>
             <th data-sort="id">ID</th>
@@ -62,7 +61,6 @@
             <th data-sort="company_name">メーカー名</th>
             <th></th>
             <th></th>
-
         </tr>
     </thead>
         <tbody>
@@ -84,13 +82,12 @@
                 <a class="btn btn-primary" href="{{ route('product.show', $product->id) }}">詳細</a>
             </td>
             <td style="text-align:center">
-                <button type="button" class="btn btn-sm btn-danger" onclick="deleteProduct({{ $product->id }})">削除</button>
+                <button type="button" class="btn btn-sm btn-danger" data-product-id="{{ $product->id }}" onclick="deleteProduct({{ $product->id }})">削除</button>
             </td>
         </tr>
         @endforeach
     </tbody>
 </table>
-</div>
 
     {!! $products->links('pagination::bootstrap-5') !!}
     </div>
