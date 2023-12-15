@@ -41,7 +41,7 @@ Route::put('/products/edit/{product}', 'App\Http\Controllers\ProductController@u
 
 Route::get('/products/show/{product}', 'App\Http\Controllers\ProductController@show')->name('product.show');
 
-Route::delete('/products/destroy/{product}', 'App\Http\Controllers\ProductController@destroy')->name('product.destroy');
+Route::get('/products/destroy/{product}', 'App\Http\Controllers\ProductController@destroy')->name('product.destroy');
 
 Route::get('/product/search', 'App\Http\Controllers\ProductController@search')->name('product.search');
 

@@ -93,14 +93,17 @@
     </div>
 
 <script>
- $(document).ready(function() {
-        // TableSorterの初期化関数
-        function initializeTableSorter() {
-            $('#productTable').tablesorter();
-        }
+
+//     // TableSorterの初期化関数
+//  function initializeTableSorter() {
+//             $('#productTable').tablesorter();
+//         }
 
         // TableSorterの初期化
         initializeTableSorter();
+
+
+ $(document).ready(function() {
 
         // 検索フォームの非同期送信
         $('#searchForm').on('submit', function(e) {
