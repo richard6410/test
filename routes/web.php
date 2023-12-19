@@ -41,7 +41,8 @@ Route::put('/products/edit/{product}', 'App\Http\Controllers\ProductController@u
 
 Route::get('/products/show/{product}', 'App\Http\Controllers\ProductController@show')->name('product.show');
 
-Route::get('/products/destroy/{product}', 'App\Http\Controllers\ProductController@destroy')->name('product.destroy');
+Route::get('/products/destroy/{delete_id}', 'App\Http\Controllers\ProductController@destroy')->name('product.destroy');
+// Route::get('/products/destroy/{product}', 'App\Http\Controllers\ProductController@destroy')->name('product.destroy');
 
 Route::get('/product/search', 'App\Http\Controllers\ProductController@search')->name('product.search');
 
@@ -54,4 +55,3 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/products/sort/{column}/{direction}', 'ProductController@index')->name('products.sort');
-

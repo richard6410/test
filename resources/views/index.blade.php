@@ -94,10 +94,10 @@
 
 <script>
 
-//     // TableSorterの初期化関数
-//  function initializeTableSorter() {
-//             $('#productTable').tablesorter();
-//         }
+    // TableSorterの初期化関数
+        function initializeTableSorter() {
+            $('#productTable').tablesorter();
+        }
 
         // TableSorterの初期化
         initializeTableSorter();
@@ -111,6 +111,7 @@
             $.ajax({
                 type: 'GET',
                 url: $(this).attr('action'),
+                dataType: 'html', // 追加
                 data: {
                     syouhinmei: $('input[name="syouhinmei"]').val(),
                     company_name: $('select[name="company_name"]').val(),
@@ -120,9 +121,12 @@
                     stock_max: $('input[name="stock_max"]').val(),
                 },
                 success: function(response) {
-                    // 検索結果を表示エリアにセット
-                    $('#searchResults').html(response);
-                    // TableSorterの再初期化
+                    var $responseHtml = $(response);
+                    var searchResults = $(response).find('#searchResults');
+                    $('#searchResults').html(searchResults);
+                    // // 検索結果を表示エリアにセット
+                    // $('#searchResults').html(response);
+                    // // TableSorterの再初期化
                     initializeTableSorter();
                 }
             });
@@ -131,39 +135,41 @@
 
         // 非同期で削除処理を行う関数
         function deleteProduct(productId) {
-            $.ajax({
-                type: 'POST',
-                headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: 'products/destroy/' + productId,
-                data: {'_method':'DELETE'},
-                success: function(response) {
-                    console.log(response); // レスポンスの内容をコンソールに表示
-                        if (response.success) {
-                        // 削除成功時は行を非表示にする
-                        $('#productRow_' + productId).hide();
-                    } else {
-                        alert('削除に失敗しました。');
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error('AJAX エラー:', textStatus, errorThrown);
-                    alert('リクエストに失敗しました。');
-                }
-            });
-        };
+            // 確認ダイアログを表示
+            if (confirm('本当に削除しますか？')) {
+                // 削除用URLを作成
+                var deleteUrl = "{{ route('product.destroy', ['delete_id' => 'PLACEHOLDER']) }}";
+                // PLACEHOLDERを置換（Laravelのテンプレート構文内にJsを追加できないため置換を実施）
+                var url = deleteUrl.replace('PLACEHOLDER', productId);
+                $.ajax({
+                    type: 'GET', // Getで実施するように修正
+                    headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: url, // 上で作成したURLを指定
+                    success: function(response) {
+                        console.log(response); // レスポンスの内容をコンソールに表示
+                            if (response.success) {
+                            // 削除が完了したことがわかるようにアラートを表示
+                            alert('削除しました！');
 
-        // 削除ボタンがクリックされた時の処理
-        $('.btn-danger').on('click', function(event) {
-            event.preventDefault();
-            var productId = $(this).data('product-id');
-            if (confirm('削除しますか？')) {
-                // 非同期で削除処理を呼び出す
-                deleteProduct(productId);
+
+                            // OKボタン押下後、リロードを実施
+                            window.location.reload();
+                        } else {
+                            alert('削除に失敗しました。');
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('AJAX エラー:', textStatus, errorThrown);
+                        alert('リクエストに失敗しました。');
+                    }
+                });
+            } else {
+                // ユーザーが「キャンセル」をクリックした場合、何もしない
+                console.log('削除がキャンセルされました。');
             }
-        });
-    
+        };
     </script>
 
 @endsection

@@ -61,15 +61,17 @@ class ProductController extends Controller
             ->with('success', '変更しました');
     }
 
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        DB::beginTransaction();
-
+        // idをGetパラメータから取得
         try {
+            DB::beginTransaction();
             $product = Product::findOrFail($id);
             $product->delete();
 
+
             DB::commit();
+
 
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
@@ -77,9 +79,9 @@ class ProductController extends Controller
             DB::rollback();
             return response()->json(['success' => false]);
 
+
         }
     }
-    
 
     public function search(Request $request,$price_min = null, $price_max = null)
     {
@@ -95,7 +97,20 @@ class ProductController extends Controller
 
         $companies = Company::all();
 
-        return view('index', compact('products', 'companies', 'page_id'));
+        // return view('index', compact('products', 'companies', 'page_id'));
+
+        $viewData = [
+            'products' => $products,
+            'companies' => $companies,
+            'page_id' => $page_id,
+        ];
+    
+        // Ajaxリクエストかどうかを判定し、適切なレスポンスを返す
+        if ($request->ajax()) {
+            return response()->json($viewData);
+        }
+    
+        return view('index', $viewData);
     }
     
 }
