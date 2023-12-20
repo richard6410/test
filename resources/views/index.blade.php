@@ -33,21 +33,20 @@
             </select>
         </div>
         <div class="col">
-            <button type="submit" class="btn btn-primary">検索</button>
+            <button type="submit" class="btn btn-primary" id = "search-btn">検索</button>
         </div>
     </div>
 </form>
     <div class="text-right">
         <a class="btn btn-success" href="{{ route('product.create')}}">新規登録</a>
     </div>
-</div>
-</div>
+
 <div class="col-lg-12">
     @if ($message =Session::get('success'))
         <div class="alert alert-success mt-1"><p>{{$message}}</p></div>
     @endif
 </div>
-</div>
+
 
 <div id="searchResults">
 <table class="table table-bordered tablesorter" id="productTable">
@@ -106,11 +105,13 @@
  $(document).ready(function() {
 
         // 検索フォームの非同期送信
-        $('#searchForm').on('submit', function(e) {
+        // $('#searchForm').on('submit', function(e)
+        $('#search-btn').on('click', function() {
             e.preventDefault();
             $.ajax({
                 type: 'GET',
-                url: $(this).attr('action'),
+                // url: $(this).attr('action'),
+                url:'product/search',
                 dataType: 'html', // 追加
                 data: {
                     syouhinmei: $('input[name="syouhinmei"]').val(),
@@ -123,10 +124,10 @@
                 success: function(response) {
                     var $responseHtml = $(response);
                     var searchResults = $(response).find('#searchResults');
-                    $('#searchResults').html(searchResults);
+                    $('#searchResults').html(searchResults.html());
                     // // 検索結果を表示エリアにセット
                     // $('#searchResults').html(response);
-                    // // TableSorterの再初期化
+                    // TableSorterの再初期化
                     initializeTableSorter();
                 }
             });

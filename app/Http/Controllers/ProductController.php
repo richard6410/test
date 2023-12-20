@@ -99,18 +99,19 @@ class ProductController extends Controller
 
         // return view('index', compact('products', 'companies', 'page_id'));
 
-        $viewData = [
-            'products' => $products,
-            'companies' => $companies,
-            'page_id' => $page_id,
-        ];
+        // $viewData = [
+        //     'products' => $products,
+        //     'companies' => $companies,
+        //     'page_id' => $page_id,
+        // ];
     
-        // Ajaxリクエストかどうかを判定し、適切なレスポンスを返す
-        if ($request->ajax()) {
-            return response()->json($viewData);
-        }
+        // // Ajaxリクエストかどうかを判定し、適切なレスポンスを返す
+        // if ($request->ajax()) {
+        //     return response()->json($viewData);
+        // }
     
-        return view('index', $viewData);
+        // return view('index', $viewData);
+        return view('index', compact('companies', 'products', 'page_id'));
     }
     
 }
