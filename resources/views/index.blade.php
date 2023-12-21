@@ -105,14 +105,13 @@
  $(document).ready(function() {
 
         // 検索フォームの非同期送信
-        // $('#searchForm').on('submit', function(e)
-        $('#search-btn').on('click', function() {
+        $('#search-btn').on('click', function(e) {
             e.preventDefault();
             $.ajax({
                 type: 'GET',
                 // url: $(this).attr('action'),
                 url:'product/search',
-                dataType: 'html', // 追加
+                dataType: 'html', 
                 data: {
                     syouhinmei: $('input[name="syouhinmei"]').val(),
                     company_name: $('select[name="company_name"]').val(),
@@ -123,10 +122,9 @@
                 },
                 success: function(response) {
                     var $responseHtml = $(response);
-                    var searchResults = $(response).find('#searchResults');
+                    var searchResults = $responseHtml.find('#searchResults');
                     $('#searchResults').html(searchResults.html());
-                    // // 検索結果を表示エリアにセット
-                    // $('#searchResults').html(response);
+
                     // TableSorterの再初期化
                     initializeTableSorter();
                 }
