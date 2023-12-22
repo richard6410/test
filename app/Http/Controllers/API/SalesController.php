@@ -4,10 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Sale;
+use App\Models\Sale;
 use App\Models\Product;
+use Illuminate\Http\Response;
 
-class SaleController extends Controller
+class SalesController extends Controller
 {
     public function purchase(Request $request)
     {
@@ -19,7 +20,7 @@ class SaleController extends Controller
         $product = Product::findOrFail($productId);
 
         // 在庫があるかチェック
-        if ($product->stock < $quantity) {
+        if ($product->zaikosuu < $quantity) {
             return response()->json(['error' => '在庫が不足しています。'], Response::HTTP_BAD_REQUEST);
         }
 
@@ -34,7 +35,7 @@ class SaleController extends Controller
             $sale->save();
 
             // productsテーブルの在庫減算
-            $product->stock -= $quantity;
+            $product->zaikosuu -= $quantity;
             $product->save();
 
             // トランザクションのコミット
